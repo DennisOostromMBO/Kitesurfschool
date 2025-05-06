@@ -3,6 +3,7 @@ DELIMITER $$
 CREATE PROCEDURE SPGetAllCustomers()
 BEGIN
     SELECT 
+        cu.id, 
         CONCAT(p.first_name, ' ', COALESCE(p.middle_name, ''), ' ', p.last_name) AS full_name,
         p.date_of_birth,
         pk.name AS package_name,

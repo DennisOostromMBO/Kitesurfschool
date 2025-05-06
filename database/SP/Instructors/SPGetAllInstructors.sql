@@ -3,6 +3,7 @@ DELIMITER $$
 CREATE PROCEDURE SPGetAllInstructors()
 BEGIN
     SELECT 
+        i.id,
         CONCAT(p.first_name, ' ', COALESCE(p.middle_name, ''), ' ', p.last_name) AS full_name,
         c.email,
         c.mobile
