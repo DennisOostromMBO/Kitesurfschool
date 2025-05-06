@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('persons_id')->constrained('persons')->onDelete('cascade');
+            $table->foreignId('package_id')->nullable()->constrained('packages')->onDelete('set null');
             $table->boolean('is_active');
             $table->text('note')->nullable();
             $table->timestamps();

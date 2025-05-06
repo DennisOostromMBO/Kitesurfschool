@@ -15,15 +15,17 @@ class CustomersSeeder extends Seeder
         DB::table('customers')->insert([
             [
                 'persons_id' => 1,
+                'package_id' => 1, 
                 'is_active' => true,
-                'note' => 'Regular customer',
+                'note' => 'Regular customer with a package',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'persons_id' => 2,
+                'package_id' => null, 
                 'is_active' => false,
-                'note' => 'Inactive customer',
+                'note' => 'Inactive customer without a package',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
