@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             CustomersSeeder::class,
             ContactsSeeder::class,
             InstructorsSeeder::class,
+            LocationsSeeder::class, 
             LessonsSeeder::class,
             PaymentsSeeder::class,
             ReservationsSeeder::class,

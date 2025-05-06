@@ -8,31 +8,33 @@
 </head>
 <body class="bg-gray-50 text-gray-900">
     <div class="container mx-auto px-6 py-8">
-        <h1 class="text-4xl font-bold mb-6">Klanten Overzicht</h1>
-        <table class="table-auto w-full bg-white shadow-md rounded-lg">
-            <thead>
-                <tr class="bg-blue-600 text-white">
-                    <th class="px-4 py-2">Naam</th>
-                    <th class="px-4 py-2">Geboortedatum</th>
-                    <th class="px-4 py-2">Pakket</th>
-                    <th class="px-4 py-2">Adres</th>
-                    <th class="px-4 py-2">Mobiel</th>
-                    <th class="px-4 py-2">Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($customers as $customer)
-                    <tr class="border-b">
-                        <td class="px-4 py-2">{{ $customer->full_name }}</td>
-                        <td class="px-4 py-2">{{ $customer->date_of_birth }}</td>
-                        <td class="px-4 py-2">{{ $customer->package_name ?? 'Geen pakket' }}</td>
-                        <td class="px-4 py-2">{{ $customer->contact_details ?? 'Geen contactgegevens' }}</td>
-                        <td class="px-4 py-2">{{ $customer->mobile ?? 'Geen mobiel' }}</td>
-                        <td class="px-4 py-2">{{ $customer->email ?? 'Geen email' }}</td>
+        <h1 class="text-5xl font-bold text-blue-600 mb-8 text-center">Klanten Overzicht</h1>
+        <div class="overflow-x-auto">
+            <table class="table-auto w-full bg-white shadow-lg rounded-lg">
+                <thead>
+                    <tr class="bg-blue-600 text-white">
+                        <th class="px-6 py-4 text-left">Naam</th>
+                        <th class="px-6 py-4 text-left">Geboortedatum</th>
+                        <th class="px-6 py-4 text-left">Pakket</th>
+                        <th class="px-6 py-4 text-left">Adres</th>
+                        <th class="px-6 py-4 text-left">Mobiel</th>
+                        <th class="px-6 py-4 text-left">Email</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($customers as $customer)
+                        <tr class="border-b hover:bg-blue-50">
+                            <td class="px-6 py-4">{{ $customer->full_name }}</td>
+                            <td class="px-6 py-4">{{ $customer->date_of_birth }}</td>
+                            <td class="px-6 py-4">{{ $customer->package_name ?? 'Geen pakket' }}</td>
+                            <td class="px-6 py-4">{{ $customer->contact_details ?? 'Geen contactgegevens' }}</td>
+                            <td class="px-6 py-4">{{ $customer->mobile ?? 'Geen mobiel' }}</td>
+                            <td class="px-6 py-4">{{ $customer->email ?? 'Geen email' }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 </html>
