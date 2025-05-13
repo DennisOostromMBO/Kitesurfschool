@@ -13,6 +13,17 @@
     <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <h1 class="text-4xl font-extrabold tracking-wide">KiteSurfschool Windkracht-12</h1>
+            @auth
+                <div class="flex items-center space-x-4">
+                    <p class="text-lg">Welkom, {{ auth()->user()->name }}!</p>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="text-white hover:underline">Uitloggen</button>
+                    </form>
+                </div>
+            @else
+                <a href="{{ route('login') }}" class="text-white hover:underline">Inloggen</a>
+            @endauth
         </div>
     </header>
 
