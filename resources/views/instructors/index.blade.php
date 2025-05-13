@@ -34,8 +34,9 @@
                                 <form action="{{ route('instructors.destroy', $instructor->id) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je deze instructeur wilt verwijderen?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                                        Verwijderen
+                                    <button type="submit" class="btn btn-danger bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center space-x-2">
+                                        <span>🗑️</span>
+                                        <span>Verwijderen</span>
                                     </button>
                                 </form>
                             </td>
