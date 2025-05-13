@@ -13,17 +13,20 @@
     <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <h1 class="text-4xl font-extrabold tracking-wide">KiteSurfschool Windkracht-12</h1>
-            @auth
+            @if (Auth::check())
                 <div class="flex items-center space-x-4">
-                    <p class="text-lg">Welkom, {{ auth()->user()->name }}!</p>
+                    <p class="text-lg">Welkom, {{ Auth::user()->name }}!</p>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="text-white hover:underline">Uitloggen</button>
                     </form>
                 </div>
             @else
-                <a href="{{ route('login') }}" class="text-white hover:underline">Inloggen</a>
-            @endauth
+                <div class="flex items-center space-x-4">
+                    <a href="{{ route('login') }}" class="text-white hover:underline">Inloggen</a>
+                    <a href="{{ route('register') }}" class="text-white hover:underline">Registeren</a>
+                </div>
+            @endif
         </div>
     </header>
 
@@ -115,16 +118,6 @@
             </div>
         </div>
     </footer>
-
-    <style>
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in-up { animation: fadeInUp 1s ease-out forwards; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-400 { animation-delay: 0.4s; }
-    </style>
 
 </body>
 </html>
