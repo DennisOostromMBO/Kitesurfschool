@@ -7,6 +7,13 @@ use Illuminate\Http\RedirectResponse;
 
 class InstructorController extends Controller
 {
+    public function __construct()
+    {
+        if (auth()->user()?->role !== 'instructor') {
+            abort(403, 'Unauthorized');
+        }
+    }
+
     public function index()
     {
         $instructors = DB::select('CALL SPGetAllInstructors()');

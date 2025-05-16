@@ -12,6 +12,16 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    @auth
+                        @if(auth()->user()->role === 'instructor')
+                            <x-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.index')">
+                                {{ __('Klanten') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('instructors.index')" :active="request()->routeIs('instructors.index')">
+                                {{ __('Instructeurs') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
