@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
 
@@ -9,8 +10,12 @@ class CustomerController extends Controller
 {
     public function __construct()
     {
-        if (auth()->user()?->role !== 'instructor') {
-            abort(403, 'Unauthorized');
+        if (!Auth::check()) {
+            abort(401, 'Niet ingelogd');
+        }
+        
+        if (Auth::user()->role !== 'instructor') {
+            abort(403, 'Geen toegang tot deze pagina');
         }
     }
 
