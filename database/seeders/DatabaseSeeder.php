@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +14,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Maak een testgebruiker aan met een gehasht wachtwoord
-        User::factory()->create([
+        // Test User (klant)
+        DB::table('users')->insert([
             'name' => 'Test User',
             'email' => 'test@example.com',
-            'password' => Hash::make('password123'), // Stel hier het wachtwoord in
+            'role' => 'klant',
+            'password' => Hash::make('password123'),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        // Instructor User
+        DB::table('users')->insert([
+            'name' => 'Instructor',
+            'email' => 'instructor@example.com',
+            'role' => 'instructor',
+            'password' => Hash::make('password123'),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         $this->call([

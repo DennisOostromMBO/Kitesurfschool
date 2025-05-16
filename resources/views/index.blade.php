@@ -14,12 +14,20 @@
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <h1 class="text-4xl font-extrabold tracking-wide">KiteSurfschool Windkracht-12</h1>
             @if (Auth::check())
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-4 relative">
                     <p class="text-lg">Welkom, {{ Auth::user()->name }}!</p>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="text-white hover:underline">Uitloggen</button>
-                    </form>
+                    <div x-data="{ open: false }" class="relative">
+                        <button @click="open = !open" class="text-white hover:underline focus:outline-none">
+                            Menu <i class="fas fa-chevron-down ml-1"></i>
+                        </button>
+                        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-40 bg-white text-gray-900 rounded shadow-lg z-50">
+                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-gray-100">Profiel</a>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100">Uitloggen</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             @else
                 <div class="flex items-center space-x-4">
@@ -118,6 +126,9 @@
             </div>
         </div>
     </footer>
+
+    <!-- Voeg Alpine.js toe voor de dropdown -->
+    <script src="//unpkg.com/alpinejs" defer></script>
 
 </body>
 </html>

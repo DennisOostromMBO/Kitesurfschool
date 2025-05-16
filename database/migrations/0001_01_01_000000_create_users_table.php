@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable(); // Maak de 'name' optioneel
             $table->string('email')->unique();
+            $table->string('role')->default('klant'); // Nieuw: rol, standaard 'klant'
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
