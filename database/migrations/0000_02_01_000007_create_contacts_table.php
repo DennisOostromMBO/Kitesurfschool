@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('person_id')->nullable()->constrained('persons')->onDelete('cascade');
             $table->foreignId('customer_id')->nullable()->constrained()->onDelete('cascade'); // Make nullable
             $table->string('street_name');
             $table->string('house_number');

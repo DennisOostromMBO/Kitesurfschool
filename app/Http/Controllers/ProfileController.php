@@ -6,6 +6,7 @@ use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -16,25 +17,36 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $profile = DB::select('CALL SPGetUserProfile(?)', [Auth::id()]);
+
         return view('profile.edit', [
-            'user' => $request->user(),
+            'profile' => $profile[0] ?? null,
         ]);
     }
 
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $params = [
+            Auth::id(),
+            $request->first_name,
+            $request->middle_name,
+            $request->last_name,
+            $request->date_of_birth,
+            $request->street_name,
+            $request->house_number,
+            $request->addition,
+            $request->postal_code,
+            $request->city,
+            $request->mobile,
+            $request->email
+        ];
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        DB::select('CALL SPUpdateUserProfile(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', $params);
+        
+        return redirect()->route('dashboard')->with('success', 'Profiel bijgewerkt');
     }
 
     /**

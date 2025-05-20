@@ -14,6 +14,7 @@ class ContactsSeeder extends Seeder
     {
         DB::table('contacts')->insert([
             [
+                'person_id' => 1, // Add this line
                 'customer_id' => 1,
                 'street_name' => 'Main Street',
                 'house_number' => '123',
@@ -28,6 +29,7 @@ class ContactsSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'person_id' => 2, // Add this line
                 'customer_id' => 2,
                 'street_name' => 'Second Avenue',
                 'house_number' => '456',
@@ -42,6 +44,7 @@ class ContactsSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'person_id' => 3, // Add this line
                 'customer_id' => null, // No customer for instructors
                 'street_name' => 'Unknown',
                 'house_number' => '0',
@@ -56,6 +59,7 @@ class ContactsSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'person_id' => 4, // Add this line
                 'customer_id' => null, // No customer for instructors
                 'street_name' => 'Unknown',
                 'house_number' => '0',
@@ -70,6 +74,7 @@ class ContactsSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'person_id' => 5, // Add this line
                 'customer_id' => null, // No customer for instructors
                 'street_name' => 'Unknown',
                 'house_number' => '0',
@@ -84,6 +89,7 @@ class ContactsSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'person_id' => 6, // Add this line
                 'customer_id' => null, // No customer for instructors
                 'street_name' => 'Unknown',
                 'house_number' => '0',
@@ -98,6 +104,7 @@ class ContactsSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'person_id' => 7, // Add this line
                 'customer_id' => null, // No customer for instructors
                 'street_name' => 'Unknown',
                 'house_number' => '0',

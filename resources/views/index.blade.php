@@ -21,6 +21,7 @@
                             Menu <i class="fas fa-chevron-down ml-1"></i>
                         </button>
                         <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-40 bg-white text-gray-900 rounded shadow-lg z-50">
+                            <a href="{{ route('dashboard') }}" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
                             <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-gray-100">Profiel</a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
