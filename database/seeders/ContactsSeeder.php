@@ -46,11 +46,11 @@ class ContactsSeeder extends Seeder
             [
                 'person_id' => 3, // Add this line
                 'customer_id' => null, // No customer for instructors
-                'street_name' => 'Unknown',
-                'house_number' => '0',
-                'addition' => null,
-                'postal_code' => '0000AA',
-                'city' => 'Unknown',
+                'street_name' => 'Zeeweg',
+                'house_number' => '45',
+                'addition' => 'A',
+                'postal_code' => '2051EC',
+                'city' => 'Overveen',
                 'mobile' => '0612345678',
                 'email' => 'duco.veenstra@example.com',
                 'is_active' => true,
@@ -61,11 +61,11 @@ class ContactsSeeder extends Seeder
             [
                 'person_id' => 4, // Add this line
                 'customer_id' => null, // No customer for instructors
-                'street_name' => 'Unknown',
-                'house_number' => '0',
+                'street_name' => 'Strandweg',
+                'house_number' => '123',
                 'addition' => null,
-                'postal_code' => '0000AA',
-                'city' => 'Unknown',
+                'postal_code' => '2586JK',
+                'city' => 'Scheveningen',
                 'mobile' => '0623456789',
                 'email' => 'waldemar.vandongen@example.com',
                 'is_active' => true,
@@ -76,11 +76,11 @@ class ContactsSeeder extends Seeder
             [
                 'person_id' => 5, // Add this line
                 'customer_id' => null, // No customer for instructors
-                'street_name' => 'Unknown',
-                'house_number' => '0',
-                'addition' => null,
-                'postal_code' => '0000AA',
-                'city' => 'Unknown',
+                'street_name' => 'Duinstraat',
+                'house_number' => '78',
+                'addition' => 'B',
+                'postal_code' => '1976BN',
+                'city' => 'IJmuiden',
                 'mobile' => '0634567890',
                 'email' => 'ruud.terlingen@example.com',
                 'is_active' => true,
@@ -91,11 +91,11 @@ class ContactsSeeder extends Seeder
             [
                 'person_id' => 6, // Add this line
                 'customer_id' => null, // No customer for instructors
-                'street_name' => 'Unknown',
-                'house_number' => '0',
+                'street_name' => 'Boulevardpad',
+                'house_number' => '15',
                 'addition' => null,
-                'postal_code' => '0000AA',
-                'city' => 'Unknown',
+                'postal_code' => '2225AM',
+                'city' => 'Katwijk',
                 'mobile' => '0645678901',
                 'email' => 'saskia.brink@example.com',
                 'is_active' => true,
@@ -106,11 +106,11 @@ class ContactsSeeder extends Seeder
             [
                 'person_id' => 7, // Add this line
                 'customer_id' => null, // No customer for instructors
-                'street_name' => 'Unknown',
-                'house_number' => '0',
-                'addition' => null,
-                'postal_code' => '0000AA',
-                'city' => 'Unknown',
+                'street_name' => 'Kustlaan',
+                'house_number' => '92',
+                'addition' => 'C',
+                'postal_code' => '2202EH',
+                'city' => 'Noordwijk',
                 'mobile' => '0656789012',
                 'email' => 'bernie.vredenstein@example.com',
                 'is_active' => true,

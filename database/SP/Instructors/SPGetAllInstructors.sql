@@ -8,7 +8,7 @@ BEGIN
         c.email,
         c.mobile
     FROM instructors i
-    INNER JOIN persons p ON i.persons_id = p.id
+    INNER JOIN persons p ON i.person_id = p.id
     LEFT JOIN contacts c ON i.contact_id = c.id;
 END$$
 
