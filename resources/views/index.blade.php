@@ -91,12 +91,27 @@
             <h2 class="text-5xl font-bold mb-12">Onze Pakketten</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 @foreach ($packages as $package)
-                    <div class="bg-white shadow-lg rounded-lg overflow-hidden transform hover:scale-105 transition-transform">
-                        <img src="{{ asset('img/paket' . $loop->iteration . '.jpg') }}" class="w-full h-40 object-cover" alt="{{ $package->name }}">
-                        <div class="p-6">
-                            <h3 class="text-2xl font-bold mb-2">{{ $package->name }}</h3>
-                            <p class="text-gray-700">€{{ number_format($package->price, 2, ',', '.') }}</p>
-                            <p class="text-sm text-gray-600">{{ $package->description }}</p>
+                    <div class="bg-white shadow-lg rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                        <div class="relative">
+                            <img src="{{ asset('img/paket' . $loop->iteration . '.jpg') }}" 
+                                 class="w-full h-48 object-cover" 
+                                 alt="{{ $package->name }}">
+                            <div class="absolute top-0 right-0 bg-blue-600 text-white px-4 py-2 rounded-bl-lg">
+                                €{{ number_format($package->price, 2, ',', '.') }}
+                            </div>
+                        </div>
+                        <div class="p-6 flex flex-col h-64">
+                            <h3 class="text-2xl font-bold mb-3 text-blue-600">{{ $package->name }}</h3>
+                            <p class="text-gray-600 flex-grow">{{ $package->description }}</p>
+                            @auth
+                                <button class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transform hover:scale-105 transition-all duration-200 shadow-md">
+                                    Koop Pakket
+                                </button>
+                            @else
+                                <a href="{{ route('login') }}" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transform hover:scale-105 transition-all duration-200 shadow-md inline-block text-center">
+                                    Koop Pakket
+                                </a>
+                            @endauth
                         </div>
                     </div>
                 @endforeach
