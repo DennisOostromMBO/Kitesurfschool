@@ -104,9 +104,12 @@
                             <h3 class="text-2xl font-bold mb-3 text-blue-600">{{ $package->name }}</h3>
                             <p class="text-gray-600 flex-grow">{{ $package->description }}</p>
                             @auth
-                                <button class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transform hover:scale-105 transition-all duration-200 shadow-md">
-                                    Koop Pakket
-                                </button>
+                                <form action="{{ route('packages.purchase', $package->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transform hover:scale-105 transition-all duration-200 shadow-md">
+                                        Koop Pakket
+                                    </button>
+                                </form>
                             @else
                                 <a href="{{ route('login') }}" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transform hover:scale-105 transition-all duration-200 shadow-md inline-block text-center">
                                     Koop Pakket

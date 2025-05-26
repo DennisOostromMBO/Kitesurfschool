@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PackageController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 // Homepage
@@ -13,9 +15,7 @@ require __DIR__.'/auth.php';
 
 // Protected routes
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Instructor routes
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
@@ -25,4 +25,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Purchase route
+    Route::post('/packages/{id}/purchase', [PackageController::class, 'purchase'])
+        ->middleware(['auth'])
+        ->name('packages.purchase');
 });
