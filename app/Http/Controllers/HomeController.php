@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Package;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $packages = Package::all();
-        return view('index', compact('packages'));
+        $packages = DB::select('CALL SPGetAllPackages()');
+        return view('index', ['packages' => $packages]);
     }
 }

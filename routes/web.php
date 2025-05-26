@@ -3,12 +3,11 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InstructorController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 // Homepage
-Route::get('/', function () {
-    return view('index');
-})->name('welcome');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 require __DIR__.'/auth.php';
 
