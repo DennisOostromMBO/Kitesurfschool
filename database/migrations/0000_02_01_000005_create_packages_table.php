@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('max_participants');
             $table->integer('duration_hours');
             $table->integer('sessions');
+            $table->foreignId('location_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         });
     }

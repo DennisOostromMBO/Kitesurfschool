@@ -9,6 +9,7 @@ class HomeController extends Controller
     public function index()
     {
         $packages = DB::select('CALL SPGetAllPackages()');
-        return view('index', ['packages' => $packages]);
+        $locations = DB::table('locations')->get();
+        return view('index', ['packages' => $packages, 'locations' => $locations]);
     }
 }

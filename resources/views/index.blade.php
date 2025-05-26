@@ -104,12 +104,9 @@
                             <h3 class="text-2xl font-bold mb-3 text-blue-600">{{ $package->name }}</h3>
                             <p class="text-gray-600 flex-grow">{{ $package->description }}</p>
                             @auth
-                                <form action="{{ route('packages.purchase', $package->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transform hover:scale-105 transition-all duration-200 shadow-md">
-                                        Koop Pakket
-                                    </button>
-                                </form>
+                                <button onclick="openModal({{ $package->id }})" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transform hover:scale-105 transition-all duration-200 shadow-md">
+                                    Koop Pakket
+                                </button>
                             @else
                                 <a href="{{ route('login') }}" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transform hover:scale-105 transition-all duration-200 shadow-md inline-block text-center">
                                     Koop Pakket
@@ -148,6 +145,43 @@
 
     <!-- Voeg Alpine.js toe voor de dropdown -->
     <script src="//unpkg.com/alpinejs" defer></script>
+
+    <!-- Modal -->
+    <div id="locationModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Kies een locatie</h3>
+                <form id="purchaseForm" action="" method="POST" class="mt-4">
+                    @csrf
+                    <select name="location_id" class="w-full mb-4 p-2 border rounded" required>
+                        <option value="">Selecteer een locatie</option>
+                        @foreach ($locations as $location)
+                            <option value="{{ $location->id }}">{{ $location->name }}</option>
+                        @endforeach
+                    </select>
+                    <div class="flex justify-between mt-4">
+                        <button type="button" onclick="closeModal()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                            Annuleren
+                        </button>
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Bevestigen
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(packageId) {
+            document.getElementById('purchaseForm').action = `/packages/${packageId}/purchase`;
+            document.getElementById('locationModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('locationModal').classList.add('hidden');
+        }
+    </script>
 
 </body>
 </html>
