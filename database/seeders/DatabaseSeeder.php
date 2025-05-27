@@ -77,6 +77,7 @@ class DatabaseSeeder extends Seeder
             InstructorsSeeder::class,
             UsersSeeder::class,
             TimeslotsSeeder::class,
+            PackageInstructorsSeeder::class,
             LocationsSeeder::class, 
             LessonsSeeder::class,
             PaymentsSeeder::class,

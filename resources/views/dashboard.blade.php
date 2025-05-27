@@ -21,6 +21,11 @@
                                         <p class="text-gray-600"><strong>Locatie:</strong> {{ $package->location_name }}</p>
                                         <p class="text-gray-600"><strong>Datum:</strong> {{ date('d-m-Y', strtotime($package->start_date)) }}</p>
                                         <p class="text-gray-600"><strong>Tijdslot:</strong> {{ $package->timeslot }}</p>
+                                        <p class="text-gray-600"><strong>Instructeur(s):</strong>
+                                            @foreach($package->instructors as $instructor)
+                                                {{ $instructor->instructor_name }}@if(!$loop->last), @endif
+                                            @endforeach
+                                        </p>
                                     </div>
                                 </div>
                             </div>
