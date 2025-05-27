@@ -10,33 +10,47 @@ class DashboardController extends Controller
     public function index()
     {
         $userId = Auth::id();
-        
-        $package = DB::table('packages as p')
-            ->join('user_packages as up', 'p.id', '=', 'up.package_id')
-            ->join('locations as l', 'up.location_id', '=', 'l.id')
-            ->join('timeslots as t', 'up.timeslot_id', '=', 't.id')
-            ->where('up.user_id', $userId)
-            ->select(
-                'p.*', 
-                'l.name as location_name', 
-                't.display_name as timeslot',
-                'up.start_date'
-            )
-            ->orderBy('up.created_at', 'desc')
-            ->first();
+        $userRole = Auth::user()->role;
 
-        if ($package) {
-            // Get instructors for this package
-            $instructors = DB::table('instructors as i')
-                ->join('package_instructors as pi', 'i.id', '=', 'pi.instructor_id')
-                ->join('persons as p', 'i.person_id', '=', 'p.id')
-                ->where('pi.package_id', $package->id)
-                ->select('p.full_name as instructor_name')
-                ->get();
+        if ($userRole === 'instructor') {
+            // Get instructor ID
+            $instructor = DB::table('instructors')
+                ->where('person_id', Auth::user()->person_id)
+                ->first();
 
-            $package->instructors = $instructors;
+            if ($instructor) {
+                $packages = DB::select('CALL SPGetInstructorPackages(?)', [$instructor->id]);
+                return view('dashboard', ['instructorPackages' => $packages]);
+            }
+        } else {
+            // Existing customer dashboard code
+            $package = DB::table('packages as p')
+                ->join('user_packages as up', 'p.id', '=', 'up.package_id')
+                ->join('locations as l', 'up.location_id', '=', 'l.id')
+                ->join('timeslots as t', 'up.timeslot_id', '=', 't.id')
+                ->where('up.user_id', $userId)
+                ->select(
+                    'p.*', 
+                    'l.name as location_name', 
+                    't.display_name as timeslot',
+                    'up.start_date'
+                )
+                ->orderBy('up.created_at', 'desc')
+                ->first();
+
+            if ($package) {
+                // Get instructors for this package
+                $instructors = DB::table('instructors as i')
+                    ->join('package_instructors as pi', 'i.id', '=', 'pi.instructor_id')
+                    ->join('persons as p', 'i.person_id', '=', 'p.id')
+                    ->where('pi.package_id', $package->id)
+                    ->select('p.full_name as instructor_name')
+                    ->get();
+
+                $package->instructors = $instructors;
+            }
+                
+            return view('dashboard', ['package' => $package]);
         }
-            
-        return view('dashboard', ['package' => $package]);
     }
 }
