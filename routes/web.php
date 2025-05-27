@@ -19,7 +19,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Instructor routes
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+    Route::delete('/customers/{id}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+
     Route::get('/instructors', [InstructorController::class, 'index'])->name('instructors.index');
+    Route::delete('/instructors/{id}', [InstructorController::class, 'destroy'])->name('instructors.destroy');
 
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

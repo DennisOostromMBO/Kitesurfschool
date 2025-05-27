@@ -53,6 +53,7 @@ class DatabaseSeeder extends Seeder
         // Create test user linked to person
         DB::table('users')->insert([
             'person_id' => $testPersonId,
+            'name' => 'TestUser',
             'email' => 'test@example.com',
             'role' => 'klant',
             'password' => Hash::make('password123'),

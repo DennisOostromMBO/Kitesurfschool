@@ -10,6 +10,10 @@ class PackageController extends Controller
 {
     public function purchase(Request $request, $id)
     {
+        if (Auth::user()->role === 'instructor') {
+            abort(403, 'Instructeurs kunnen geen pakketten kopen');
+        }
+
         $request->validate([
             'location_id' => 'required|exists:locations,id',
             'timeslot_id' => 'required|exists:timeslots,id',
