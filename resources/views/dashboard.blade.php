@@ -17,6 +17,11 @@
                                     <h4 class="text-xl font-bold text-blue-600">{{ $package->name }}</h4>
                                     <p class="mt-2 text-gray-600">{{ $package->description }}</p>
                                     <p class="mt-2 font-bold">€{{ number_format($package->price, 2, ',', '.') }}</p>
+                                    <div class="mt-4 pt-4 border-t border-gray-200">
+                                        <p class="text-gray-600"><strong>Locatie:</strong> {{ $package->location_name }}</p>
+                                        <p class="text-gray-600"><strong>Datum:</strong> {{ date('d-m-Y', strtotime($package->start_date)) }}</p>
+                                        <p class="text-gray-600"><strong>Tijdslot:</strong> {{ $package->timeslot }}</p>
+                                    </div>
                                 </div>
                             </div>
                         @else
