@@ -28,6 +28,15 @@
                                             <p class="text-gray-600"><strong>Locatie:</strong> {{ $package->location_name }}</p>
                                             <p class="text-gray-600"><strong>Datum:</strong> {{ date('d-m-Y', strtotime($package->start_date)) }}</p>
                                             <p class="text-gray-600"><strong>Tijdslot:</strong> {{ $package->timeslot }}</p>
+                                            <div class="mt-4 flex justify-end">
+                                                <form action="{{ route('packages.cancel', $package->user_package_id) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je dit pakket wilt annuleren?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                                        Pakket Annuleren
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 @endforeach

@@ -3,6 +3,7 @@ DELIMITER $$
 CREATE PROCEDURE SPGetInstructorPackages(IN p_instructor_id INT)
 BEGIN
     SELECT 
+        up.id as user_package_id,
         p.name as package_name,
         p.description,
         p.price,

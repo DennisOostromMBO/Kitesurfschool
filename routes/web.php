@@ -33,4 +33,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/packages/{id}/purchase', [PackageController::class, 'purchase'])
         ->middleware(['auth'])
         ->name('packages.purchase');
+
+    // Cancel route
+    Route::delete('/packages/{id}/cancel', [PackageController::class, 'cancel'])
+        ->middleware(['auth'])
+        ->name('packages.cancel');
 });

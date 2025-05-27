@@ -32,4 +32,33 @@ class PackageController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Pakket succesvol gekocht!');
     }
+
+    public function cancel($id)
+    {
+        // Verify the instructor is authorized to cancel this package
+        $instructor = DB::table('instructors')
+            ->where('person_id', Auth::user()->person_id)
+            ->first();
+
+        if (!$instructor) {
+            abort(403, 'Alleen instructeurs kunnen pakketten annuleren');
+        }
+
+        // Check if package belongs to this instructor
+        $packageBelongsToInstructor = DB::table('user_packages as up')
+            ->join('package_instructors as pi', 'up.package_id', '=', 'pi.package_id')
+            ->where('up.id', $id)
+            ->where('pi.instructor_id', $instructor->id)
+            ->exists();
+
+        if (!$packageBelongsToInstructor) {
+            abort(403, 'Je bent niet bevoegd om dit pakket te annuleren');
+        }
+
+        // Delete the user_package
+        DB::table('user_packages')->where('id', $id)->delete();
+
+        return redirect()->route('dashboard')
+            ->with('success', 'Pakket succesvol geannuleerd');
+    }
 }
