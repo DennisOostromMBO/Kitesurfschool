@@ -11,15 +11,17 @@ class PackageController extends Controller
     public function purchase(Request $request, $id)
     {
         $request->validate([
-            'location_id' => 'required|exists:locations,id'
+            'location_id' => 'required|exists:locations,id',
+            'timeslot_id' => 'required|exists:timeslots,id',
+            'start_date' => 'required|date|after:yesterday',
         ]);
 
-        $userId = Auth::id();
-
         DB::table('user_packages')->insert([
-            'user_id' => $userId,
+            'user_id' => Auth::id(),
             'package_id' => $id,
             'location_id' => $request->location_id,
+            'timeslot_id' => $request->timeslot_id,
+            'start_date' => $request->start_date,
             'created_at' => now(),
             'updated_at' => now()
         ]);

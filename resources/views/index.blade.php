@@ -153,12 +153,32 @@
                 <h3 class="text-lg leading-6 font-medium text-gray-900">Kies een locatie</h3>
                 <form id="purchaseForm" action="" method="POST" class="mt-4">
                     @csrf
-                    <select name="location_id" class="w-full mb-4 p-2 border rounded" required>
-                        <option value="">Selecteer een locatie</option>
-                        @foreach ($locations as $location)
-                            <option value="{{ $location->id }}">{{ $location->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Kies een locatie</label>
+                        <select name="location_id" class="w-full p-2 border rounded" required>
+                            <option value="">Selecteer een locatie</option>
+                            @foreach ($locations as $location)
+                                <option value="{{ $location->id }}">{{ $location->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Kies een datum</label>
+                        <input type="date" name="start_date" class="w-full p-2 border rounded" 
+                               min="{{ date('Y-m-d') }}" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Kies een tijdslot</label>
+                        <select name="timeslot_id" class="w-full p-2 border rounded" required>
+                            <option value="">Selecteer een tijdslot</option>
+                            @foreach ($timeslots as $timeslot)
+                                <option value="{{ $timeslot->id }}">{{ $timeslot->display_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <div class="flex justify-between mt-4">
                         <button type="button" onclick="closeModal()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
                             Annuleren

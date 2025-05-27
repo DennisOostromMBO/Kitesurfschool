@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Ramsey\Uuid\Type\Time;
 
 class DatabaseSeeder extends Seeder
 {
@@ -75,6 +76,7 @@ class DatabaseSeeder extends Seeder
             ContactsSeeder::class,
             InstructorsSeeder::class,
             UsersSeeder::class,
+            TimeslotsSeeder::class,
             LocationsSeeder::class, 
             LessonsSeeder::class,
             PaymentsSeeder::class,
