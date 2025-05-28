@@ -10,6 +10,18 @@ class UsersSeeder extends Seeder
 {
     public function run(): void
     {
+        // Add owner user at the start
+        DB::table('users')->insert([
+            [
+                'name' => 'Eigenaar',
+                'email' => 'admin@gmail.com',
+                'password' => Hash::make('password123'),
+                'role' => 'eigenaar',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        ]);
+
         DB::table('users')->insert([
             [
                 'person_id' => 4,

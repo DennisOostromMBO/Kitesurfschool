@@ -12,6 +12,10 @@ class PackageController extends Controller
 {
     public function purchase(Request $request, $id)
     {
+        if (Auth::user()->role === 'instructor' || Auth::user()->role === 'eigenaar') {
+            abort(403, 'Instructeurs en eigenaren kunnen geen pakketten kopen');
+        }
+
         try {
             DB::beginTransaction();
 
