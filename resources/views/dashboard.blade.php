@@ -49,6 +49,11 @@
                         @else
                             <p>Je hebt nog geen leerlingen toegewezen gekregen.</p>
                         @endif
+                    @elseif(Auth::user()->role === 'eigenaar')
+                        <h3 class="text-2xl font-bold mb-6">Eigenaar Dashboard</h3>
+                        <p class="text-gray-600">
+                            Welkom in het beheerderspaneel. Gebruik de navigatiebalk hierboven om gebruikers, instructeurs en klanten te beheren.
+                        </p>
                     @else
                         @isset($package)
                             @if($package)

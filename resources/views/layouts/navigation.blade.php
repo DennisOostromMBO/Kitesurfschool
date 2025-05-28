@@ -24,6 +24,12 @@
                             {{ __('Klanten') }}
                         </x-nav-link>
                     @endif
+
+                    @if(Auth::user()->role === 'eigenaar')
+                        <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
+                            {{ __('Gebruikers') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 

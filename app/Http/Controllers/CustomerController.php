@@ -14,7 +14,7 @@ class CustomerController extends Controller
             abort(401, 'Niet ingelogd');
         }
         
-        if (Auth::user()->role !== 'instructor') {
+        if (!in_array(Auth::user()->role, ['instructor', 'eigenaar'])) {
             abort(403, 'Geen toegang tot deze pagina');
         }
     }

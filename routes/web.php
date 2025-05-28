@@ -6,6 +6,7 @@ use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Homepage
@@ -38,4 +39,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/packages/{id}/cancel', [PackageController::class, 'cancel'])
         ->middleware(['auth'])
         ->name('packages.cancel');
+
+    // User management routes (owner only)
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::patch('/users/{id}/role', [UserController::class, 'updateRole'])->name('users.update-role');
 });
