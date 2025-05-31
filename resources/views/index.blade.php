@@ -6,10 +6,25 @@
     <title>KiteSurfschool Windkracht-12</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+     <style>
+        .notification {
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(0); }
+        }
+    </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
+    @if(session('error'))
+        <div class="fixed top-0 left-0 right-0 bg-red-500 text-white text-center p-4 z-[9999]">
+            {{ session('error') }}
+            <button onclick="this.parentElement.style.display='none'" class="float-right mr-4 text-white hover:text-gray-200">×</button>
+        </div>
+    @endif
 
-    <!-- Header -->
+    <!-- Header with lower z-index -->
     <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <h1 class="text-4xl font-extrabold tracking-wide">KiteSurfschool Windkracht-12</h1>
