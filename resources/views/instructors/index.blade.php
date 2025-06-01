@@ -29,7 +29,9 @@
                                     <th class="px-6 py-4 text-left">Naam</th>
                                     <th class="px-6 py-4 text-left">Email</th>
                                     <th class="px-6 py-4 text-left">Mobiel</th>
-                                    <th class="px-6 py-4 text-left">Acties</th>
+                                    @if(Auth::user()->role === 'eigenaar')
+                                        <th class="px-6 py-4 text-left">Acties</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -38,16 +40,18 @@
                                         <td class="px-6 py-4">{{ $instructor->full_name }}</td>
                                         <td class="px-6 py-4">{{ $instructor->email }}</td>
                                         <td class="px-6 py-4">{{ $instructor->mobile }}</td>
-                                        <td class="px-6 py-4">
-                                            <form action="{{ route('instructors.destroy', $instructor->id) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je deze instructeur wilt verwijderen?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center space-x-2">
-                                                    <span>🗑️</span>
-                                                    <span>Verwijderen</span>
-                                                </button>
-                                            </form>
-                                        </td>
+                                        @if(Auth::user()->role === 'eigenaar')
+                                            <td class="px-6 py-4">
+                                                <form action="{{ route('instructors.destroy', $instructor->id) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je deze instructeur wilt verwijderen?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center space-x-2">
+                                                        <span>🗑️</span>
+                                                        <span>Verwijderen</span>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
