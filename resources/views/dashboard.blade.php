@@ -15,7 +15,9 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     @if(Auth::user()->role === 'instructor')
-                        <h3 class="text-2xl font-bold mb-6">Mijn Leerlingen</h3>
+                        <div class="flex justify-between mb-4">
+                            <h3 class="text-2xl font-bold">Mijn Leerlingen</h3>
+                        </div>
                         @if(isset($instructorPackages) && count($instructorPackages) > 0)
                             <div class="grid gap-6">
                                 @foreach($instructorPackages as $package)
@@ -33,12 +35,26 @@
                                             <p class="text-gray-600"><strong>Locatie:</strong> {{ $package->location_name }}</p>
                                             <p class="text-gray-600"><strong>Datum:</strong> {{ date('d-m-Y', strtotime($package->start_date)) }}</p>
                                             <p class="text-gray-600"><strong>Tijdslot:</strong> {{ $package->timeslot }}</p>
-                                            <div class="mt-4 flex justify-end">
-                                                <form action="{{ route('packages.cancel', $package->user_package_id) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je dit pakket wilt annuleren?');">
+                                            <div class="mt-4 flex justify-end space-x-2">
+                                                <!-- Weer mail button -->
+                                                <form action="{{ route('lessons.cancel-email', $package->user_package_id) }}" method="POST">
                                                     @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                                                        Pakket Annuleren
+                                                    <input type="hidden" name="type" value="weather">
+                                                    <button type="submit" 
+                                                            onclick="return confirm('Weet je zeker dat je de les wilt annuleren wegens het weer? Het pakket wordt hierna verwijderd.')"
+                                                            class="bg-yellow-500 text-white py-2 px-4 rounded">
+                                                        Weer Annulering
+                                                    </button>
+                                                </form>
+
+                                                <!-- Ziekte mail button -->
+                                                <form action="{{ route('lessons.cancel-email', $package->user_package_id) }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="type" value="illness">
+                                                    <button type="submit"
+                                                            onclick="return confirm('Weet je zeker dat je de les wilt annuleren wegens ziekte? Het pakket wordt hierna verwijderd.')"
+                                                            class="bg-red-500 text-white py-2 px-4 rounded">
+                                                        Ziekte Annulering
                                                     </button>
                                                 </form>
                                             </div>
@@ -185,6 +201,29 @@
 
         function hideAbsenceModal() {
             document.getElementById('absenceModal').classList.add('hidden');
+        }
+
+        function sendCancellationMail(packageId, type) {
+            if (confirm(`Weet je zeker dat je een ${type === 'weather' ? 'weer' : 'ziekte'} annuleringsmail wilt versturen?`)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/lessons/${packageId}/cancel-email`;
+                
+                const csrf = document.createElement('input');
+                csrf.type = 'hidden';
+                csrf.name = '_token';
+                csrf.value = document.querySelector('meta[name="csrf-token"]').content;
+                
+                const typeInput = document.createElement('input');
+                typeInput.type = 'hidden';
+                typeInput.name = 'type';
+                typeInput.value = type;
+                
+                form.appendChild(csrf);
+                form.appendChild(typeInput);
+                document.body.appendChild(form);
+                form.submit();
+            }
         }
     </script>
 

@@ -8,6 +8,7 @@ use App\Http\Controllers\PackageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\LessonController;
 use Illuminate\Support\Facades\Route;
 
 // Homepage
@@ -49,6 +50,11 @@ Route::middleware(['auth'])->group(function () {
         ->name('packages.reject');
     Route::post('/package-rejections/{id}/handle', [PackageController::class, 'handleRejection'])
         ->name('rejections.handle');
+
+    // Lesson routes
+    Route::post('/lessons/{id}/cancel-email', [LessonController::class, 'sendCancellationEmail'])
+        ->name('lessons.cancel-email')
+        ->middleware(['auth']);
 });
 
 // Password reset routes
