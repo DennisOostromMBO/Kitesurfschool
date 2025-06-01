@@ -108,6 +108,8 @@
                                                 <p class="text-gray-600">{{ $package->description }}</p>
                                                 <p class="text-gray-600"><strong>Datum:</strong> {{ date('d-m-Y', strtotime($package->start_date)) }}</p>
                                                 <p class="text-gray-600"><strong>Tijdslot:</strong> {{ $package->timeslot }}</p>
+                                                <p class="text-gray-600"><strong>Instructeur:</strong> {{ $package->instructor_name }}</p>
+                                                <p class="text-gray-600"><strong>Email Instructeur:</strong> {{ $package->instructor_email }}</p>
                                             </div>
                                             <button onclick="showAbsenceModal({{ $package->id }})" 
                                                     class="text-blue-600 hover:text-blue-800 text-sm font-medium">

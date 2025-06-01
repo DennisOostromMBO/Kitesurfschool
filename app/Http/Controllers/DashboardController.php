@@ -33,11 +33,15 @@ class DashboardController extends Controller
             return view('dashboard');
         }
         else {
-            // Get customer's packages with rejections
+            // Get customer's packages with instructor info
             $packages = DB::table('user_packages as up')
                 ->join('packages as p', 'up.package_id', '=', 'p.id')
                 ->join('locations as l', 'up.location_id', '=', 'l.id')
                 ->join('timeslots as t', 'up.timeslot_id', '=', 't.id')
+                ->join('package_instructors as pi', 'p.id', '=', 'pi.package_id')
+                ->join('instructors as i', 'pi.instructor_id', '=', 'i.id')
+                ->join('persons as instructor_person', 'i.person_id', '=', 'instructor_person.id')
+                ->join('contacts as instructor_contact', 'i.contact_id', '=', 'instructor_contact.id')
                 ->leftJoin('package_rejections as pr', 'up.id', '=', 'pr.user_package_id')
                 ->where('up.user_id', $user->id)
                 ->select(
@@ -49,7 +53,9 @@ class DashboardController extends Controller
                     't.display_name as timeslot',
                     'pr.id as rejection_id',
                     'pr.reason as rejection_reason',
-                    'pr.status as rejection_status'
+                    'pr.status as rejection_status',
+                    'instructor_person.full_name as instructor_name',
+                    'instructor_contact.email as instructor_email'
                 )
                 ->get()
                 ->map(function ($package) {
