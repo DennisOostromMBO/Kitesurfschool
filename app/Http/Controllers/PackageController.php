@@ -12,15 +12,16 @@ class PackageController extends Controller
 {
     public function purchase(Request $request, $id)
     {
-        // Check for existing booking
-        $existingBooking = DB::table('user_packages')
-            ->where('user_id', Auth::id())
+        // Remove the existing booking check
+        // Check only for time slot conflict
+        $busyTimeSlot = DB::table('user_packages')
             ->where('start_date', $request->start_date)
             ->where('timeslot_id', $request->timeslot_id)
-            ->first();
+            ->whereIn('user_id', [Auth::id()])
+            ->exists();
 
-        if ($existingBooking) {
-            return back()->with('error', 'Je hebt al een pakket geboekt op deze datum en tijdstip!');
+        if ($busyTimeSlot) {
+            return back()->with('error', 'Je hebt al een pakket op dit tijdstip!');
         }
 
         // Get instructors for THIS package only
@@ -117,5 +118,90 @@ class PackageController extends Controller
 
         return redirect()->route('dashboard')
             ->with('success', 'Pakket succesvol geannuleerd');
+    }
+
+    public function reject(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'reason' => 'required|string|min:10',
+            ]);
+
+            DB::beginTransaction();
+
+            // Check if package exists and belongs to user
+            $package = DB::table('user_packages')
+                ->where('id', $id)
+                ->where('user_id', Auth::id())
+                ->first();
+
+            if (!$package) {
+                return back()->with('error', 'Pakket niet gevonden.');
+            }
+
+            // Create rejection record
+            DB::table('package_rejections')->insert([
+                'user_package_id' => $id,
+                'reason' => $request->reason,
+                'status' => 'pending',
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('dashboard')
+                ->with('success', 'Absentie melding is succesvol ingediend.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()
+                ->with('error', 'Er is iets misgegaan: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
+    public function handleRejection(Request $request, $rejectionId)
+    {
+        $request->validate([
+            'status' => 'required|in:approved,denied',
+            'response' => 'required|string',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // Get the specific rejection
+            $rejection = DB::table('package_rejections')
+                ->where('id', $rejectionId)
+                ->first();
+
+            if (!$rejection) {
+                return back()->with('error', 'Afwijzing niet gevonden.');
+            }
+
+            // Update rejection status
+            DB::table('package_rejections')
+                ->where('id', $rejectionId)
+                ->update([
+                    'status' => $request->status,
+                    'instructor_response' => $request->response,
+                    'updated_at' => now(),
+                ]);
+
+            // Only delete the specific package if approved
+            if ($request->status === 'approved') {
+                DB::table('user_packages')
+                    ->where('id', $rejection->user_package_id)
+                    ->delete();
+            }
+
+            DB::commit();
+            return redirect()->route('dashboard')
+                ->with('success', 'Afwijzing ' . ($request->status === 'approved' ? 'goedgekeurd' : 'afgewezen'));
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Er is iets misgegaan bij het verwerken van de afwijzing.');
+        }
     }
 }

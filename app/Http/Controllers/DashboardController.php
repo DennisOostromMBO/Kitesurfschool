@@ -9,42 +9,58 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $userId = Auth::id();
-        $userRole = Auth::user()->role;
+        $user = Auth::user();
 
-        if ($userRole === 'instructor' || $userRole === 'eigenaar') {
-            // Use the correct SP name
-            $packages = DB::select('CALL SPGetAllInstructorPackages()');
-            return view('dashboard', ['instructorPackages' => $packages]);
+        if ($user->role === 'instructor') {
+            // Get instructor's packages
+            $instructorId = DB::table('instructors')
+                ->where('person_id', $user->person_id)
+                ->value('id');
+                
+            $instructorPackages = DB::select('CALL SPGetInstructorPackages(?)', [$instructorId]);
+
+            // Add rejection data
+            foreach ($instructorPackages as $package) {
+                $rejection = DB::table('package_rejections')
+                    ->where('user_package_id', $package->user_package_id)
+                    ->first();
+                $package->rejection = $rejection;
+            }
+
+            return view('dashboard', ['instructorPackages' => $instructorPackages]);
         }
-
-        // Existing customer dashboard code
-        $package = DB::table('packages as p')
-            ->join('user_packages as up', 'p.id', '=', 'up.package_id')
-            ->join('locations as l', 'up.location_id', '=', 'l.id')
-            ->join('timeslots as t', 'up.timeslot_id', '=', 't.id')
-            ->where('up.user_id', $userId)
-            ->select(
-                'p.*', 
-                'l.name as location_name', 
-                't.display_name as timeslot',
-                'up.start_date'
-            )
-            ->orderBy('up.created_at', 'desc')
-            ->first();
-
-        if ($package) {
-            // Get instructors for this package
-            $instructors = DB::table('instructors as i')
-                ->join('package_instructors as pi', 'i.id', '=', 'pi.instructor_id')
-                ->join('persons as p', 'i.person_id', '=', 'p.id')
-                ->where('pi.package_id', $package->id)
-                ->select('p.full_name as instructor_name')
-                ->get();
-
-            $package->instructors = $instructors;
+        elseif ($user->role === 'eigenaar') {
+            return view('dashboard');
         }
-            
-        return view('dashboard', ['package' => $package]);
+        else {
+            // Get customer's packages with rejections
+            $packages = DB::table('user_packages as up')
+                ->join('packages as p', 'up.package_id', '=', 'p.id')
+                ->join('locations as l', 'up.location_id', '=', 'l.id')
+                ->join('timeslots as t', 'up.timeslot_id', '=', 't.id')
+                ->leftJoin('package_rejections as pr', 'up.id', '=', 'pr.user_package_id')
+                ->where('up.user_id', $user->id)
+                ->select(
+                    'up.id',
+                    'p.name',
+                    'p.description',
+                    'l.name as location_name',
+                    'up.start_date',
+                    't.display_name as timeslot',
+                    'pr.id as rejection_id',
+                    'pr.reason as rejection_reason',
+                    'pr.status as rejection_status'
+                )
+                ->get()
+                ->map(function ($package) {
+                    $package->rejection = $package->rejection_id ? (object)[
+                        'reason' => $package->rejection_reason,
+                        'status' => $package->rejection_status
+                    ] : null;
+                    return $package;
+                });
+
+            return view('dashboard', ['packages' => $packages]);
+        }
     }
 }

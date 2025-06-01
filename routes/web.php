@@ -44,6 +44,11 @@ Route::middleware(['auth'])->group(function () {
     // User management routes (owner only)
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::patch('/users/{id}/role', [UserController::class, 'updateRole'])->name('users.update-role');
+
+    Route::post('/packages/{id}/reject', [PackageController::class, 'reject'])
+        ->name('packages.reject');
+    Route::post('/package-rejections/{id}/handle', [PackageController::class, 'handleRejection'])
+        ->name('rejections.handle');
 });
 
 // Password reset routes
