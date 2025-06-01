@@ -165,42 +165,75 @@
 
     <!-- Modal -->
     <div id="locationModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div class="mt-3 text-center">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">Kies een locatie</h3>
-                <form id="purchaseForm" action="" method="POST" class="mt-4">
+        <div class="relative top-10 mx-auto p-6 border w-[600px] shadow-lg rounded-lg bg-white">
+            <div class="space-y-4">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h3 class="text-xl font-bold text-gray-900">Boek je les</h3>
+                    <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">&times;</button>
+                </div>
+
+                <form id="purchaseForm" action="" method="POST" class="space-y-4">
                     @csrf
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Kies een locatie</label>
-                        <select name="location_id" class="w-full p-2 border rounded" required>
-                            <option value="">Selecteer een locatie</option>
-                            @foreach ($locations as $location)
-                                <option value="{{ $location->id }}">{{ $location->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Kies een datum</label>
-                        <input type="date" name="start_date" class="w-full p-2 border rounded" 
-                               min="{{ date('Y-m-d') }}" required>
+                    <!-- Twee kolommen voor basis info -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-medium mb-1">Locatie</label>
+                            <select name="location_id" class="w-full p-2 border rounded focus:ring-1 focus:ring-blue-500 text-sm" required>
+                                <option value="">Selecteer een locatie</option>
+                                @foreach($locations as $location)
+                                    <option value="{{ $location->id }}">{{ $location->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 text-sm font-medium mb-1">Tijdslot</label>
+                            <select name="timeslot_id" class="w-full p-2 border rounded focus:ring-1 focus:ring-blue-500 text-sm" required>
+                                <option value="">Selecteer een tijdslot</option>
+                                @foreach($timeslots as $timeslot)
+                                    <option value="{{ $timeslot->id }}">{{ $timeslot->display_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-span-2">
+                            <label class="block text-gray-700 text-sm font-medium mb-1">Datum</label>
+                            <input type="date" name="start_date" 
+                                   class="w-full p-2 border rounded focus:ring-1 focus:ring-blue-500 text-sm"
+                                   min="{{ date('Y-m-d') }}" required>
+                        </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Kies een tijdslot</label>
-                        <select name="timeslot_id" class="w-full p-2 border rounded" required>
-                            <option value="">Selecteer een tijdslot</option>
-                            @foreach ($timeslots as $timeslot)
-                                <option value="{{ $timeslot->id }}">{{ $timeslot->display_name }}</option>
-                            @endforeach
-                        </select>
+                    <!-- Duo deelnemer sectie -->
+                    <div id="duoParticipantSection" class="hidden">
+                        <div class="border-t pt-4 mt-2">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="col-span-2">
+                                    <label class="block text-gray-700 text-sm font-medium mb-1">Naam mede-cursist</label>
+                                    <input type="text" name="duo_participant_name" 
+                                           class="w-full p-2 border rounded focus:ring-1 focus:ring-blue-500 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-medium mb-1">Email</label>
+                                    <input type="email" name="duo_participant_email" 
+                                           class="w-full p-2 border rounded focus:ring-1 focus:ring-blue-500 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-medium mb-1">Telefoon</label>
+                                    <input type="tel" name="duo_participant_phone" 
+                                           class="w-full p-2 border rounded focus:ring-1 focus:ring-blue-500 text-sm">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="flex justify-between mt-4">
-                        <button type="button" onclick="closeModal()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                    <div class="flex justify-end space-x-2 pt-4 border-t">
+                        <button type="button" onclick="closeModal()" 
+                                class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">
                             Annuleren
                         </button>
-                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <button type="submit" 
+                                class="px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-700">
                             Bevestigen
                         </button>
                     </div>
@@ -212,6 +245,18 @@
     <script>
         function openModal(packageId) {
             document.getElementById('purchaseForm').action = `/packages/${packageId}/purchase`;
+            // Toon/verberg duo deelnemer sectie gebaseerd op pakket ID
+            const duoSection = document.getElementById('duoParticipantSection');
+            const duoInputs = duoSection.querySelectorAll('input');
+            
+            if ([2, 3, 4].includes(packageId)) {
+                duoSection.classList.remove('hidden');
+                duoInputs.forEach(input => input.required = true);
+            } else {
+                duoSection.classList.add('hidden');
+                duoInputs.forEach(input => input.required = false);
+            }
+            
             document.getElementById('locationModal').classList.remove('hidden');
         }
 

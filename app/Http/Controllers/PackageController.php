@@ -46,12 +46,14 @@ class PackageController extends Controller
                 'location_id' => 'required|exists:locations,id',
                 'timeslot_id' => 'required|exists:timeslots,id',
                 'start_date' => 'required|date|after:yesterday',
+                'duo_participant_name' => 'required_if:package_id,2,3,4',
+                'duo_participant_email' => 'nullable|email',
+                'duo_participant_phone' => 'nullable',
             ]);
 
-            // If all checks pass, proceed with the purchase
             DB::beginTransaction();
 
-            // Insert purchase record
+            // Insert user_package record
             $userPackageId = DB::table('user_packages')->insertGetId([
                 'user_id' => Auth::id(),
                 'package_id' => $id,
@@ -62,6 +64,19 @@ class PackageController extends Controller
                 'updated_at' => now()
             ]);
 
+            // For duo packages, save participant info
+            if (in_array($id, [2, 3, 4]) && $request->duo_participant_name) {
+                DB::table('duo_participants')->insert([
+                    'user_package_id' => $userPackageId,
+                    'name' => $request->duo_participant_name,
+                    'email' => $request->duo_participant_email,
+                    'phone' => $request->duo_participant_phone,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+
+            // Get all data for email
             $package = DB::table('packages')->where('id', $id)->first();
             $location = DB::table('locations')->where('id', $request->location_id)->first();
             $timeslot = DB::table('timeslots')->where('id', $request->timeslot_id)->first();
@@ -73,7 +88,8 @@ class PackageController extends Controller
                 'locationName' => $location->name,
                 'date' => date('d-m-Y', strtotime($request->start_date)),
                 'timeslot' => $timeslot->display_name,
-                'orderId' => $userPackageId
+                'orderId' => $userPackageId,
+                'duoParticipant' => $request->duo_participant_name ?? null
             ];
 
             Mail::to(Auth::user()->email)->send(new PackagePurchaseConfirmation($emailData));
