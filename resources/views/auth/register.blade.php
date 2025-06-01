@@ -26,70 +26,24 @@
                     Word lid van onze surfcommunity
                 </h2>
                 <p class="mt-2 text-sm text-gray-600">
-                    Begin vandaag nog met je kitesurfavontuur!
+                    Registreer met je emailadres om te beginnen
                 </p>
             </div>
 
-            <form class="mt-8 space-y-6" method="POST" action="{{ route('register') }}" autocomplete="off">
+            <form class="mt-8 space-y-6" method="POST" action="{{ route('register') }}">
                 @csrf
-                <input type="hidden" name="hidden" value="something" />  <!-- Chrome trick to disable autofill -->
-                <div class="space-y-4">
-                    <!-- Naam -->
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700">Naam</label>
-                        <input id="name" name="name" type="text" required 
-                               class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
-                                      focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                               autocomplete="off"
-                               autocorrect="off"
-                               autocapitalize="off"
-                               spellcheck="false" />
-                    </div>
-
-                    <!-- Email -->
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input id="email" name="email" type="email" required 
-                               class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
-                                      focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                               autocomplete="new-email"
-                               autocorrect="off"
-                               autocapitalize="off"
-                               spellcheck="false" />
-                    </div>
-
-                    <!-- Wachtwoord -->
-                    <div>
-                        <label for="new-password" class="block text-sm font-medium text-gray-700">Wachtwoord</label>
-                        <input id="new-password" name="password" type="password" required 
-                               class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
-                                      focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                               autocomplete="new-password" />
-                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                    </div>
-
-                    <!-- Bevestig Wachtwoord -->
-                    <div>
-                        <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Bevestig Wachtwoord</label>
-                        <input id="password_confirmation" name="password_confirmation" type="password" required 
-                               class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
-                                      focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
-                        <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-                    </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input id="email" name="email" type="email" required 
+                           class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm"
+                           autocomplete="off" />
+                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
 
-                <div class="flex items-center justify-between">
-                    <div class="text-sm">
-                        <a href="{{ route('login') }}" class="font-medium text-blue-600 hover:text-blue-500">
-                            Al een account?
-                        </a>
-                    </div>
-                    <button type="submit" 
-                            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg 
-                                   transform transition-all duration-200 hover:scale-105 hover:shadow-lg">
-                        Registreren
-                    </button>
-                </div>
+                <button type="submit" 
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg">
+                    Registreren
+                </button>
             </form>
         </div>
     </div>

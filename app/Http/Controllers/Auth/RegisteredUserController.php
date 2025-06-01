@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VerifyEmail;
+use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -31,55 +34,41 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
         ]);
 
-        // Begin transaction
         DB::beginTransaction();
         try {
-            // Create person record
+            // First create a person record
             $personId = DB::table('persons')->insertGetId([
-                'first_name' => $request->name, // Initially use full name as first name
-                'last_name' => '', // Empty for now
-                'date_of_birth' => now(), // Default date
+                'first_name' => '',
+                'last_name' => '',
+                'date_of_birth' => now(),
                 'is_active' => true,
                 'created_at' => now(),
-                'updated_at' => now(),
+                'updated_at' => now()
             ]);
 
-            // Create contact record
-            DB::table('contacts')->insert([
-                'person_id' => $personId,
-                'street_name' => '',
-                'house_number' => '',
-                'postal_code' => '',
-                'city' => '',
-                'mobile' => '',
-                'email' => $request->email,
-                'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            // Create user with person_id
+            // Then create the user with the person_id
             $user = User::create([
-                'name' => $request->name ?? 'Gebruiker', // Standaardwaarde voor 'name'
+                'name' => 'Gebruiker',
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'person_id' => $personId,
+                'password' => Hash::make(Str::random(40)),
                 'role' => 'klant',
+                'verification_token' => Str::random(64),
+                'person_id' => $personId  // Make sure person_id is fillable in User model
             ]);
 
             DB::commit();
+            
+            Mail::to($user->email)->send(new VerifyEmail($user));
 
-            Auth::login($user);
+            return redirect()->route('verification.notice')
+                ->with('email', $user->email);
 
-            return redirect('/');
         } catch (\Exception $e) {
             DB::rollBack();
-            throw $e;
+            return back()->withErrors(['email' => 'Registratie mislukt: ' . $e->getMessage()]);
         }
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Auth\PasswordController;
 use Illuminate\Support\Facades\Route;
 
 // Homepage
@@ -44,3 +45,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::patch('/users/{id}/role', [UserController::class, 'updateRole'])->name('users.update-role');
 });
+
+// Password reset routes
+Route::get('/set-password/{token}', [PasswordController::class, 'showSetPasswordForm'])
+    ->name('password.show');
+Route::post('/set-password', [PasswordController::class, 'setPassword'])
+    ->name('password.store');
+
+// Email verification notice
+Route::get('/email/verify-notice', function () {
+    return view('auth.verify-notice');
+})->name('verification.notice');

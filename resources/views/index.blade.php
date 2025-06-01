@@ -30,7 +30,7 @@
             <h1 class="text-4xl font-extrabold tracking-wide">KiteSurfschool Windkracht-12</h1>
             @if (Auth::check())
                 <div class="flex items-center space-x-4 relative">
-                    <p class="text-lg">Welkom, {{ Auth::user()->name }}!</p>
+                    <p class="text-lg">Welkom!</p>
                     <div x-data="{ open: false }" class="relative">
                         <button @click="open = !open" class="text-white hover:underline focus:outline-none">
                             Menu <i class="fas fa-chevron-down ml-1"></i>

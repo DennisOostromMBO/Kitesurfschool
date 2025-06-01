@@ -15,12 +15,52 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): View
+    public function edit(Request $request)
     {
-        $profile = DB::select('CALL SPGetUserProfile(?)', [Auth::id()]);
+        $user = Auth::user();
+        
+        // Get person data
+        $person = DB::table('persons')
+            ->where('id', $user->person_id)
+            ->first();
+            
+        // Get contact data
+        $contact = DB::table('contacts')
+            ->where('person_id', $user->person_id)
+            ->first();
+
+        if (!$contact) {
+            // Create default contact record if none exists
+            $contactId = DB::table('contacts')->insertGetId([
+                'person_id' => $user->person_id,
+                'street_name' => '',
+                'house_number' => '',
+                'postal_code' => '',
+                'city' => '',
+                'mobile' => '',
+                'email' => $user->email,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+            
+            $contact = DB::table('contacts')->where('id', $contactId)->first();
+        }
 
         return view('profile.edit', [
-            'profile' => $profile[0] ?? null,
+            'profile' => (object)[
+                'first_name' => $person->first_name ?? '',
+                'middle_name' => $person->middle_name ?? '',
+                'last_name' => $person->last_name ?? '',
+                'date_of_birth' => $person->date_of_birth ?? '',
+                'street_name' => $contact->street_name ?? '',
+                'house_number' => $contact->house_number ?? '',
+                'addition' => $contact->addition ?? '',
+                'postal_code' => $contact->postal_code ?? '',
+                'city' => $contact->city ?? '',
+                'mobile' => $contact->mobile ?? '',
+                'email' => $user->email
+            ]
         ]);
     }
 
@@ -29,24 +69,53 @@ class ProfileController extends Controller
      */
     public function update(Request $request): RedirectResponse
     {
-        $params = [
-            Auth::id(),
-            $request->first_name,
-            $request->middle_name,
-            $request->last_name,
-            $request->date_of_birth,
-            $request->street_name,
-            $request->house_number,
-            $request->addition,
-            $request->postal_code,
-            $request->city,
-            $request->mobile,
-            $request->email
-        ];
+        $user = $request->user();
 
-        DB::select('CALL SPUpdateUserProfile(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', $params);
-        
-        return redirect()->route('dashboard')->with('success', 'Profiel bijgewerkt');
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
+            'street_name' => 'required|string|max:255',
+            'house_number' => 'required|string|max:10',
+            'postal_code' => 'required|string|max:10',
+            'city' => 'required|string|max:255',
+            'mobile' => 'required|string|max:20',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // Update person
+            DB::table('persons')
+                ->where('id', $user->person_id)
+                ->update([
+                    'first_name' => $request->first_name,
+                    'middle_name' => $request->middle_name,
+                    'last_name' => $request->last_name,
+                    'date_of_birth' => $request->date_of_birth,
+                    'updated_at' => now(),
+                ]);
+
+            // Update contact
+            DB::table('contacts')
+                ->where('person_id', $user->person_id)
+                ->update([
+                    'street_name' => $request->street_name,
+                    'house_number' => $request->house_number,
+                    'addition' => $request->addition,
+                    'postal_code' => $request->postal_code,
+                    'city' => $request->city,
+                    'mobile' => $request->mobile,
+                    'updated_at' => now(),
+                ]);
+
+            DB::commit();
+            return redirect()->route('dashboard')
+                ->with('success', 'Profiel succesvol bijgewerkt!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Profiel update mislukt: ' . $e->getMessage()]);
+        }
     }
 
     /**
